@@ -35,6 +35,9 @@ else
     exit 1
 fi
 
+# save folders_to_backup to txt file so restore.sh can use it
+echo "${FOLDERS_TO_BACKUP[@]}" > "$BACKUP_FOLDER/folders_to_backup.txt"
+
 ./weekly_full_backup.sh ${FOLDERS_TO_BACKUP[@]}
 
 # Add weekly script to crontab

@@ -4,6 +4,19 @@
 BACKUP_DIR="backup"
 WEEKLY_BACKUP_FOLDER="weekly_backup"
 DAILY_BACKUP_FOLDER="daily_backup"
+OLD_FOLDER="old_backup"
+
+# Read folders to backup from file
+FOLDERS_TO_BACKUP=$(<"$BACKUP_DIR/folders_to_backup.txt")
+
+mkdir -p $BACKUP_DIR/$OLD_FOLDER
+# Remove old backup
+rm -r $BACKUP_DIR/$OLD_FOLDER/*
+
+# Move Folders to backup to old_backup
+for folder in $FOLDERS_TO_BACKUP; do
+    mv -i $folder $BACKUP_DIR/$OLD_FOLDER
+done
 
 PREVIOUS_SNAPSHOT=$(ls -t $BACKUP_DIR/$WEEKLY_BACKUP_FOLDER/snapshot_*.snar | head -n 1)
 CURRENT_BACKUP_FOLDER=$(find $BACKUP_DIR/$DAILY_BACKUP_FOLDER -type d -name \
@@ -13,7 +26,7 @@ CURRENT_BACKUP_FOLDER=$(find $BACKUP_DIR/$DAILY_BACKUP_FOLDER -type d -name \
 
 # Select which backup to restore (full or incremental)
 FULL_BACKUP_FILE=$(ls -t $BACKUP_DIR/$WEEKLY_BACKUP_FOLDER/full_backup_*.tar.gz | head -n 1)  # Example: Full backup to restore
-RESTORE_DIR="restore"  # Directory to restore the backup
+RESTORE_DIR="/"  # Directory to restore the backup i dont want to risk it with root
 
 
 # Create the restore directory if it does not exist
